@@ -4,13 +4,22 @@ services:
     hostname: mariadb
     build: requirements/mariadb/
     env_file:
-      - ./.env
+      - .env
     networks:
       - inception
     volumes:
       - "mariadb:/var/lib/mysql"
     expose:
       - 3306
+  nginx:
+    container_name: nginx
+    build: requirements/nginx/
+    networks:
+      - inception
+    env_file:
+      - .env
+    ports:
+      - "443:443"
 networks:
   inception:
     driver: bridge

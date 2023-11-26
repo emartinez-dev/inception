@@ -1,0 +1,12 @@
+FROM alpine:3.17
+
+RUN apk update && apk add nginx openssl
+
+COPY tools/nginx.sh /nginx.sh
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 443
+
+RUN /nginx.sh
+
+CMD ["nginx", "-g", "daemon off;"]
