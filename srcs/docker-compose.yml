@@ -3,7 +3,8 @@ services:
     container_name: mariadb
     hostname: mariadb
     build: requirements/mariadb/
-    env_file: .env
+    env_file:
+      - ./.env
     networks:
       - inception
     volumes:
@@ -19,5 +20,4 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: "/goinfre/franmart/data/mariadb/"
-        #device: "/home/franmart/data/mariadb/"
+      device: "/home/franmart/data/mariadb/"

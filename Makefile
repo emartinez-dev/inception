@@ -1,6 +1,6 @@
 DOCKER-COMPOSE = srcs/docker-compose.yml
-DATA-DIR = /goinfre/franmart/data
-#DATA-DIR = /home/franmart/data
+#DATA-DIR = /goinfre/franmart/data
+DATA-DIR = /home/franmart/data
 MARIADB-DIR = $(DATA-DIR)/mariadb
 NETWORK-NAME = inception
 
@@ -22,10 +22,12 @@ build:
 	docker-compose -f $(DOCKER-COMPOSE) build
 
 shell:
-	docker-compose -f $(DOCKER-COMPOSE) exec -it $(service) bash
+	docker exec -it $(service) bash
 
 clean: stop
 	rm -rf $(DATA-DIR)
-	docker network rm $(NETWORK-NAME)
+	#docker network rm $(NETWORK-NAME)
+	docker-compose -f $(DOCKER-COMPOSE) rm -fvs
+	docker system prune -a
 
 .PHONY: all start stop logs clean build shell clean
