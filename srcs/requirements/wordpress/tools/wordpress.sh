@@ -5,8 +5,8 @@
 WORDPRESS_FOLDER="/var/www/wordpress"
 CONFIG_FILE="$WORDPRESS_FOLDER/wp-config.php"
 
-if  [ -f "$CONFIG_FILE" ] ; then
-	echo "Wordpress is already installed"
+if [ -f "/usr/bin/wp" ] && [ wp core is-installed ]; then
+	echo "Wordpress is already installed..."
 else
 	cd /tmp && wget http://wordpress.org/latest.tar.gz && tar -xzvf latest.tar.gz
 	mkdir -p /tmp/wordpress/wp-content/upgrade
@@ -43,9 +43,12 @@ EOF
 	chmod +x wp-cli.phar
 	mv wp-cli.phar /usr/bin/wp
 	wp core install --allow-root --url=https://franmart.42.fr --title=franmart \
-		--admin_user=$WP_USER --admin_password=$DB_PASSWORD \
+		--admin_user=$WP_USER --admin_password=$WP_PASSWORD \
 		--admin_email=$WP_EMAIL --path=$WORDPRESS_FOLDER
+	wp user create $WP_GUEST $WP_GUESTEMAIL --role=subscriber --user-pass=$WP_GUESTPASSWORD
 fi
 
 chown -R franmart:wp_group $WORDPRESS_FOLDER && chmod -R 775 $WORDPRESS_FOLDER
+#
+# Use -F to prevent daemonizing the php-fpm
 php-fpm81 -y /etc/php/8.1/fpm/php-fpm.conf -F
