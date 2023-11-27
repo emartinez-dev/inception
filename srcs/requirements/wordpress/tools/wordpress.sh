@@ -5,41 +5,46 @@
 WORDPRESS_FOLDER="/var/www/html"
 CONFIG_FILE="$WORDPRESS_FOLDER/wp-config.php"
 
-cd /tmp && wget http://wordpress.org/latest.tar.gz && tar -xzvf latest.tar.gz
-mkdir -p /tmp/wordpress/wp-content/upgrade
-cp -a /tmp/wordpress/. $WORDPRESS_FOLDER
+if ! [[-f $CONFIG_FILE ]]
+then
+	cd /tmp && wget http://wordpress.org/latest.tar.gz && tar -xzvf latest.tar.gz
+	mkdir -p /tmp/wordpress/wp-content/upgrade
+	cp -a /tmp/wordpress/. $WORDPRESS_FOLDER
 
-# Setup permissions
-chmod 755 -R $WORDPRESS_FOLDER
-chmod 644 -R $WORDPRESS_FOLDER
+	# Setup permissions
+	chmod 755 -R $WORDPRESS_FOLDER
+	chmod 644 -R $WORDPRESS_FOLDER
 
-cat << EOF > $CONFIG_FILE
-<?php
-define( 'DB_NAME', '$DB_NAME' );
-define( 'DB_USER', '$DB_USER' );
-define( 'DB_PASSWORD', '$DB_PASSWORD' );
-define( 'DB_HOST', 'franmart.42.fr' );
-define( 'DB_CHARSET', 'utf8' );
-define( 'DB_COLLATE', '' );
-define( 'FS_METHOD', 'direct');
+	cat << EOF > $CONFIG_FILE
+	<?php
+	define( 'DB_NAME', '$DB_NAME' );
+	define( 'DB_USER', '$DB_USER' );
+	define( 'DB_PASSWORD', '$DB_PASSWORD' );
+	define( 'DB_HOST', 'franmart.42.fr' );
+	define( 'DB_CHARSET', 'utf8' );
+	define( 'DB_COLLATE', '' );
+	define( 'FS_METHOD', 'direct');
 EOF
 
-wget -qO - https://api.wordpress.org/secret-key/1.1/salt/ >> $CONFIG_FILE
+	wget -qO - https://api.wordpress.org/secret-key/1.1/salt/ >> $CONFIG_FILE
 
-cat << EOF >> $CONFIG_FILE
-$table_prefix = 'wp_';
-define( 'WP_DEBUG', false );
-if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', __DIR__ . '/' );
-}
-require_once ABSPATH . 'wp-settings.php';
-EOF
+	cat << EOF >> $CONFIG_FILE
+	$table_prefix = 'wp_';
+	define( 'WP_DEBUG', false );
+	if ( ! defined( 'ABSPATH' ) ) {
+		define( 'ABSPATH', __DIR__ . '/' );
+	}
+	require_once ABSPATH . 'wp-settings.php';
+	EOF
 
-wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-chmod +x wp-cli.phar
-mv wp-cli.phar /usr/bin/wp
-wp core install --allow-root --url=https://franmart.42.fr --title=franmart \
+	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+	chmod +x wp-cli.phar
+	mv wp-cli.phar /usr/bin/wp
+	wp core install --allow-root --url=https://franmart.42.fr --title=franmart \
 		--admin_user=$WP_USER --admin_password=$DB_PASSWORD \
 		--admin_email=$WP_EMAIL --path=/var/www/html
+	else
+		echo "Wordpress is already installed"
+	fi
 
-php-fpm81 -y /etc/php/8.1/fpm/php-fpm.conf -F
+	php-fpm81 -y /etc/php/8.1/fpm/php-fpm.conf -F

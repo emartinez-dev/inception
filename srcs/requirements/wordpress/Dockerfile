@@ -6,6 +6,5 @@ COPY tools/wordpress.sh /
 COPY conf/php-fpm.conf /etc/php/8.1/fpm/php-fpm.conf
 
 RUN addgroup -S nginx && adduser -S nginx -G nginx
-RUN adduser -S franmart -G www-data
 
 CMD ["/wordpress.sh"]
