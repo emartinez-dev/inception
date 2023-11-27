@@ -20,6 +20,24 @@ services:
       - .env
     ports:
       - "443:443"
+    volumes:
+      - "wordpress:/var/www/html"
+    depends_on:
+      - wordpress
+  wordpress:
+    container_name: wordpress
+    hostname: wordpress
+    build: requirements/wordpress/
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    networks:
+      - inception
+    volumes:
+      - "wordpress:/var/www/html"
+    ports:
+      - "9000:9000"
 networks:
   inception:
     driver: bridge
@@ -30,3 +48,9 @@ volumes:
       type: none
       o: bind
       device: "/home/franmart/data/mariadb/"
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/home/franmart/data/wordpress/"
