@@ -9,4 +9,7 @@ EXPOSE 443
 
 RUN /nginx.sh
 
+# run nginx without halting and without & commands or anything strange:
+# https://stackoverflow.com/questions/18861300/how-to-run-nginx-within-a-docker-container-without-halting
+
 CMD ["nginx", "-g", "daemon off;"]
