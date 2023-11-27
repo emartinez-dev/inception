@@ -21,7 +21,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - "wordpress:/var/www/html"
+      - "wordpress:/var/www/wordpress"
     depends_on:
       - wordpress
   wordpress:
@@ -35,7 +35,7 @@ services:
     networks:
       - inception
     volumes:
-      - "wordpress:/var/www/html"
+      - "wordpress:/var/www/wordpress"
     ports:
       - "9000:9000"
 networks:

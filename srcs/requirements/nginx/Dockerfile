@@ -9,6 +9,6 @@ EXPOSE 443
 
 RUN /nginx.sh
 
-RUN chmod -R 755 /var/www/html && chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/wordpress && chown -R nginx:www-data /var/www/wordpress
 
 CMD ["nginx", "-g", "daemon off;"]

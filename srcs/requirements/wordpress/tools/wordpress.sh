@@ -2,11 +2,12 @@
 
 #https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-on-ubuntu-20-04-with-a-lamp-stack
 
-WORDPRESS_FOLDER="/var/www/html"
+WORDPRESS_FOLDER="/var/www/wordpress"
 CONFIG_FILE="$WORDPRESS_FOLDER/wp-config.php"
 
-if ! [[-f $CONFIG_FILE ]]
-then
+if  [ -f "$CONFIG_FILE" ] ; then
+	echo "Wordpress is already installed"
+else
 	cd /tmp && wget http://wordpress.org/latest.tar.gz && tar -xzvf latest.tar.gz
 	mkdir -p /tmp/wordpress/wp-content/upgrade
 	cp -a /tmp/wordpress/. $WORDPRESS_FOLDER
@@ -35,16 +36,14 @@ EOF
 		define( 'ABSPATH', __DIR__ . '/' );
 	}
 	require_once ABSPATH . 'wp-settings.php';
-	EOF
+EOF
 
 	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 	chmod +x wp-cli.phar
 	mv wp-cli.phar /usr/bin/wp
 	wp core install --allow-root --url=https://franmart.42.fr --title=franmart \
 		--admin_user=$WP_USER --admin_password=$DB_PASSWORD \
-		--admin_email=$WP_EMAIL --path=/var/www/html
-	else
-		echo "Wordpress is already installed"
-	fi
+		--admin_email=$WP_EMAIL --path=$WORDPRESS_FOLDER
+fi
 
-	php-fpm81 -y /etc/php/8.1/fpm/php-fpm.conf -F
+php-fpm81 -y /etc/php/8.1/fpm/php-fpm.conf -F
