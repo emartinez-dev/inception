@@ -25,12 +25,13 @@ else
 	define( 'DB_CHARSET', 'utf8' );
 	define( 'DB_COLLATE', '' );
 	define( 'FS_METHOD', 'direct');
+
 EOF
 
 	wget -qO - https://api.wordpress.org/secret-key/1.1/salt/ >> $CONFIG_FILE
 
+	echo '$table_prefix = "wp_";' >> $CONFIG_FILE
 	cat << EOF >> $CONFIG_FILE
-	$table_prefix = 'wp_';
 	define( 'WP_DEBUG', false );
 	if ( ! defined( 'ABSPATH' ) ) {
 		define( 'ABSPATH', __DIR__ . '/' );
@@ -46,4 +47,5 @@ EOF
 		--admin_email=$WP_EMAIL --path=$WORDPRESS_FOLDER
 fi
 
+chown -R franmart:wp_group $WORDPRESS_FOLDER && chmod -R 775 $WORDPRESS_FOLDER
 php-fpm81 -y /etc/php/8.1/fpm/php-fpm.conf -F

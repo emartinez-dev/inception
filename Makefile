@@ -23,7 +23,7 @@ build:
 	docker-compose -f $(DOCKER-COMPOSE) build
 
 shell:
-	docker exec -it $(service) bash
+	docker exec -it $(service) ash || docker exec -it $(service) bash
 
 clean: stop
 	rm -rf $(DATA-DIR)
