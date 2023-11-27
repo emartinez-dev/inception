@@ -45,8 +45,6 @@ EOF
 	wp core install --allow-root --url=https://franmart.42.fr --title=franmart \
 		--admin_user=$WP_USER --admin_password=$WP_PASSWORD \
 		--admin_email=$WP_EMAIL --path=$WORDPRESS_FOLDER
-	wp user create $WP_GUEST $WP_GUESTEMAIL --role=subscriber \
-	--user-pass=$WP_GUESTPASSWORD --path=$WORDPRESS_FOLDER
 fi
 
 chown -R franmart:wp_group $WORDPRESS_FOLDER && chmod -R 775 $WORDPRESS_FOLDER
